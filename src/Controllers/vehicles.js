@@ -57,14 +57,14 @@ const updateVehicle = (req, res) => {
   const input = {
     image: host + imageUrl,
   };
-  const updateVehicle = (input, id) => new Promise((resolve, reject) => {
-    const updateQs = 'UPDATE vehicle SET ? WHERE id = ?';
-    db.query(updateQs, [input, id], (err, result) => {
+  const updateVehicleModel = (inputModel, id) => new Promise((resolve, reject) => {
+    const updateQs = 'UPDATE vehicles SET ? WHERE id = ?';
+    db.query(updateQs, [inputModel, id], (err, result) => {
       if (err) return reject(err);
       return resolve(result);
     });
   });
-  updateVehicle(input, params.id)
+  updateVehicleModel(input, params.id)
     .then((result) => responseHelper.success(res, 200, result))
     .catch((err) => responseHelper.error(res, 500, err));
 };

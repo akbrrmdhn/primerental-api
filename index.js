@@ -18,5 +18,5 @@ app.use(express.static('public'));
 app.use(mainRouter);
 
 app.listen(port, () => {
-  // console.log(`App started at port ${port}`);
+  console.log(`App started at port ${port}`);
 });

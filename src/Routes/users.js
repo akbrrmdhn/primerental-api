@@ -1,6 +1,6 @@
 const userRouter = require('express').Router();
 
-const userController = require('../Controllers/users');
+const userController = require('../controllers/users');
 
 userRouter.post('/', userController.addNewUser);
 userRouter.patch('/password/:id', userController.updatePassword);

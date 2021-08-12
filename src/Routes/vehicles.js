@@ -1,8 +1,8 @@
 const vehicleRouter = require('express').Router();
 
-const vehicleController = require('../Controllers/vehicles');
-const upload = require('../Middlewares/upload');
-const authMiddleware = require('../Middlewares/auth');
+const vehicleController = require('../controllers/vehicles');
+const upload = require('../middlewares/upload');
+// const authMiddleware = require('../middlewares/auth');
 
 vehicleRouter.post('/', vehicleController.addNewVehicle);
 vehicleRouter.get('/', vehicleController.getAllVehicles);

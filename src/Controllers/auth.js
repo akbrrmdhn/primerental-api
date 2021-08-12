@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
-const userModel = require('../Models/users');
-const authModel = require('../Models/auth');
+const userModel = require('../models/users');
+const authModel = require('../models/auth');
 const responseHelper = require('../helpers/response');
 
 const login = (req, res) => {
