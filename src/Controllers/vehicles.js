@@ -5,41 +5,41 @@ const responseHelper = require('../helpers/response');
 const db = require('../database/mysql');
 
 const addNewVehicle = (req, res) => {
-  const { body } = req;
+  const { file, body } = req;
 
   vehiclesModel
-    .addNewVehicle(body)
+    .addNewVehicle(file, body)
     .then((data) => responseHelper.success(res, 200, data))
     .catch((err) => responseHelper.error(res, 500, err));
 };
 
-const getAllVehicles = (req, res) => {
-  const { query } = req;
+const getVehicles = (req, res) => {
+  const { query, hostname } = req;
   vehiclesModel
-    .getAllVehicles(query)
-    .then(({
-      data, count, currentPage, limit,
-    }) => {
-      const baseURL = 'http://localhost:8000/vehicles';
-      const totalData = count[0].total_data;
-      const totalPage = Math.ceil(totalData / limit);
-      const prevPage = currentPage > 1
-        ? `${baseURL}?page=${currentPage - 1}&limit=${limit}`
-        : null;
-      const nextPage = currentPage < totalPage
-        ? `${baseURL}?page=${currentPage + 1}&limit=${limit}`
-        : null;
-      const info = {
-        totalData,
-        currentPage,
-        totalPage,
-        nextPage,
-        prevPage,
-      };
-      responseHelper.success(res, 200, data, info);
-    })
+    .getVehicles(query, hostname)
+    .then(
+      ({ result, totalData, totalPage, currentPage, prevPage, nextPage }) => {
+        const info = {
+          data: result,
+          totalData,
+          totalPage,
+          currentPage,
+          prevPage,
+          nextPage,
+        };
+        responseHelper.success(res, 200, info);
+      }
+    )
     .catch((err) => responseHelper.error(res, 500, err));
 };
+
+const getVehicleById = (req, res) => {
+  const { params } = req;
+  vehiclesModel
+    .getVehicleById(params.id)
+    .then((data) => responseHelper.success(res, 200, data))
+    .catch((err) => responseHelper.error(res, 500, err));
+}
 
 const findVehicle = (req, res) => {
   const { query } = req;
@@ -51,20 +51,8 @@ const findVehicle = (req, res) => {
 };
 
 const updateVehicle = (req, res) => {
-  const { file, params } = req;
-  const host = 'http://localhost:8000';
-  const imageUrl = `/images/${file.filename}`;
-  const input = {
-    image: host + imageUrl,
-  };
-  const updateVehicleModel = (inputModel, id) => new Promise((resolve, reject) => {
-    const updateQs = 'UPDATE vehicles SET ? WHERE id = ?';
-    db.query(updateQs, [inputModel, id], (err, result) => {
-      if (err) return reject(err);
-      return resolve(result);
-    });
-  });
-  updateVehicleModel(input, params.id)
+  const { file, params, body } = req;
+  vehiclesModel.updateVehicle(file, params.id, body)
     .then((result) => responseHelper.success(res, 200, result))
     .catch((err) => responseHelper.error(res, 500, err));
 };
@@ -77,10 +65,19 @@ const deleteVehicle = (req, res) => {
     .catch((err) => responseHelper.error(res, 500, err));
 };
 
+const getByScore = (req, res) => {
+  const { query } = req;
+  vehiclesModel.getByScore(query)
+    .then((result) => responseHelper.success(res, 200, result))
+    .catch((error) => responseHelper.error(res, 500, error));
+};
+
 module.exports = {
   addNewVehicle,
-  getAllVehicles,
+  getVehicles,
+  getVehicleById,
   findVehicle,
   updateVehicle,
   deleteVehicle,
+  getByScore,
 };

@@ -11,7 +11,7 @@ const addNewHistory = (body) => new Promise((resolve, reject) => {
 
 // READ ALL
 const getAllHistories = () => new Promise((resolve, reject) => {
-  const queryString = 'SELECT h.rent_date AS rental_date, h.status AS Payment_Status, u.name AS Patron, v.name AS Rented_vehicle FROM histories h JOIN users u ON h.user_id = u.id JOIN vehicles v ON h.vehicle_id = v.id';
+  const queryString = 'SELECT h.rent_date AS rental_date, h.status AS Payment_Status, u.name AS buyer, v.name AS Rented_vehicle FROM histories h JOIN users u ON h.user_id = u.id JOIN vehicles v ON h.vehicle_id = v.id';
   db.query(queryString, (error, result) => {
     if (error) return reject(error);
     return resolve(result);

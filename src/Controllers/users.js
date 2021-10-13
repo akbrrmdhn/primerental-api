@@ -4,11 +4,18 @@ const usersModel = require('../models/users');
 const responseHelper = require('../helpers/response');
 
 // CREATE NEW
-const addNewUser = (req, res) => {
-  const { body } = req;
+// const addNewUser = (req, res) => {
+//   const { body } = req;
 
-  usersModel
-    .addNewUser(body)
+//   usersModel
+//     .addNewUser(body)
+//     .then((data) => responseHelper.success(res, 200, data))
+//     .catch((err) => responseHelper.error(res, 500, err));
+// };
+
+const getUserById = (req, res) => {
+  const { params } = req;
+  usersModel.getUserById(params.id)
     .then((data) => responseHelper.success(res, 200, data))
     .catch((err) => responseHelper.error(res, 500, err));
 };
@@ -21,11 +28,11 @@ const updatePassword = (req, res) => {
     .catch((err) => responseHelper.error(res, 500, err));
 };
 
-const updateProfile = (req, res) => {
-  const { params } = req;
+const editUser = (req, res) => {
+  const { file, params, body } = req;
   usersModel
-    .updateUserName(params.id, params.name)
-    .then((data) => responseHelper.success(res, 200, data))
+    .editUser(file, params.id, body)
+    .then((result) => responseHelper.success(res, 200, result))
     .catch((err) => responseHelper.error(res, 500, err));
 };
 
@@ -38,8 +45,9 @@ const deleteUser = (req, res) => {
 };
 
 module.exports = {
-  addNewUser,
+  // addNewUser,
+  getUserById,
   updatePassword,
-  updateProfile,
+  editUser,
   deleteUser,
 };
