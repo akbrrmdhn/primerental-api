@@ -11,9 +11,7 @@ const login = (req, res) => {
 };
 
 const register = (req, res) => {
-  // CREATE NEW USER
   const { body } = req;
-  // HASH PASSWORD
   userModel
     .addNewUser(body)
     .then((result) => responseHelper.success(res, 201, result))
@@ -27,8 +25,15 @@ const logout = (req, res) => {
     .catch((err) => responseHelper.error(res, 500, err.message));
 };
 
+const clear = (req, res) => {
+  authModel.clear(req)
+    .then((result) => responseHelper.success(res, 200, result))
+    .catch((err) => responseHelper.success(res, 200, err));
+}
+
 module.exports = {
   login,
   register,
   logout,
+  clear,
 };

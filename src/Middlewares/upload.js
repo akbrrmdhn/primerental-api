@@ -13,6 +13,21 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const fileFilter = (req, file, cb) => {
+  const fileExt = ["jpg", "png", "jpeg"];
+  const isFileAccepted = fileExt.some((fileExt) =>
+    path.extname(file.originalname).toLowerCase().includes(fileExt)
+  );
+  if (!isFileAccepted) {
+    req.fileValidationError = "File format must be jpg, jpeg, or png!";
+    return cb(null, false, new Error(req.fileValidationError));
+  }
+  return cb(null, true);
+};
+
+const upload = multer({ storage, fileFilter, limits: {
+  fileSize: 3 * 1000 * 1000
+  },
+});
 
 module.exports = upload;

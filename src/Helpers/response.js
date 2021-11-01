@@ -1,16 +1,17 @@
-const success = (res, status, result, info) => {
+const success = (res, message, status, result) => {
   const objectResponse = {
-    errorMsg: null,
+    message,
+    status,
     result,
-    info,
   };
   res.status(status).json(objectResponse);
 };
 
-const error = (res, status, errorMsg) => {
+const error = (res, message, status, infoError) => {
   const objectResponse = {
-    errorMsg,
-    data: null,
+    message,
+    infoError,
+    status,
   };
   res.status(status).json(objectResponse);
 };
