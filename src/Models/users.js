@@ -21,20 +21,31 @@ const randomCode = (length) => {
 const addNewUser = (body) => new Promise((resolve, reject) => {
   const role_id = 3;
   const gender_id = 1;
-  const qs = 'INSERT INTO users SET ?';
-  bcrypt.genSalt(10, (err, salt) => {
+  const { email, phone, password } = body;
+  const getEmail = `SELECT email FROM users WHERE email = ?`;
+  db.query(getEmail, email, (err, resultGetEmail) => {
     if (err) return reject(err);
-    bcrypt.hash(body.password, salt, (error, hash) => {
-      if (error) return reject(error);
-      const userData = {
-        ...body,
-        role_id,
-        gender_id,
-        password: hash,
-      };
-      db.query(qs, userData, (err, result) => {
-        if (err) return reject(err);
-        return resolve(result);
+    if (resultGetEmail.length) return reject("emailHandler");
+    const getPhone = `SELECT phone FROM users WHERE phone = ?`;
+    db.query(getPhone, phone, (err, resultGetPhone) => {
+      if (err) return reject(err);
+      if (resultGetPhone.length) return reject('phoneHandler');
+      bcrypt.genSalt(10, (err, resultSalt) => {
+        if (err) return reject("genSalt error");
+        bcrypt.hash(password, resultSalt, (err, resultHashPassword) => {
+          if (err) return reject('Hash password error');
+          const userData = {
+            ...body,
+            password: resultHashPassword,
+            role_id,
+            gender_id,
+          }
+          const registerQuery = `INSERT INTO users SET ?`;
+          db.query(registerQuery, userData, (err) => {
+            if (err) return reject(err);
+            return resolve('User registered');
+          });
+        });
       });
     });
   });
