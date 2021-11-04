@@ -76,7 +76,7 @@ const getVehicles = (query) => new Promise((resolve, reject) => {
 });
 
 const getVehicleById = (id) => new Promise((resolve, reject) => {
-  const qs = 'SELECT v.id AS id, v.name AS name, c.name AS category, v.stock, v.description, l.name AS location, v.image, v.price, v.owner_id FROM vehicles v JOIN categories c ON v.category_id = c.id JOIN locations l ON v.location_id = l.id WHERE v.id = ?';
+  const qs = 'SELECT v.id AS id, v.name AS name, c.name AS category, v.stock, v.description, l.name AS location, v.image, v.price, v.owner_id, bs.id AS status_id, bs.name AS book_status FROM vehicles v JOIN categories c ON v.category_id = c.id JOIN locations l ON v.location_id = l.id JOIN booking_status bs ON v.booking_status_id = bs.id WHERE v.id = ?';
   db.query(qs, id, (error, result) => {
     if (error) return reject(error);
     return resolve(result);
@@ -119,17 +119,6 @@ const deleteVehicle = (id) => new Promise((resolve, reject) => {
   });
 });
 
-const getByScore = (query) => new Promise((resolve, reject) => {
-  const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 4;
-  const offset = limit * (page - 1);
-  const queryString = 'SELECT v.id, v.name AS name, v.image, v.description, v.price, l.name AS location FROM vehicles v JOIN locations l ON v.location_id = l.id ORDER BY v.score DESC LIMIT ? OFFSET ?';
-  db.query(queryString, [limit, offset], (error, result) => {
-    if (error) return reject(error);
-    return resolve(result);
-  });
-});
-
 const getFavourites = (query) => new Promise((resolve, reject) => {
   let user_id = query.user_id;
   let category_id = '> 0';
@@ -144,6 +133,7 @@ const getFavourites = (query) => new Promise((resolve, reject) => {
   const queryString = `SELECT v.id AS vehicle_id, v.name AS name, v.image, v.description, v.category_id, l.name AS location, v.price, v.score AS score FROM user_vehicle uv JOIN vehicles v ON uv.vehicle_id = v.id JOIN locations l ON v.location_id = l.id WHERE uv.user_id = ${user_id} AND category_id${category_id} AND location_id${location_id} ORDER BY ${order_by} ${sort} LIMIT ${limit} OFFSET ${offset}`;
   db.query(queryString, (err, result) => {
     if (err) return reject(err);
+    if (!result.length) return reject(404);
     const countString = `SELECT COUNT(uv.id) AS total_data FROM user_vehicle uv JOIN vehicles v ON uv.vehicle_id = v.id WHERE uv.user_id = ${user_id} AND v.category_id ${category_id} AND v.location_id ${location_id}`;
     db.query(countString, (error, countResult) => {
       if (error) return reject(error);
@@ -196,7 +186,6 @@ module.exports = {
   getVehicleById,
   updateVehicle,
   deleteVehicle,
-  getByScore,
   likeVehicle,
   unlikeVehicle,
   getFavourites,

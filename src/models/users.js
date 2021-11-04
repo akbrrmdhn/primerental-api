@@ -6,21 +6,11 @@ const bcrypt = require('bcrypt');
 const db = require('../database/mysql');
 const nodemailer = require("nodemailer");
 
-const randomCode = (length) => {
-  let result = '';
-  const characters = '0123456789';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i += 1) {
-    result += characters.charAt(Math.floor(Math.random()
-    * charactersLength));
-  }
-  return result;
-};
-
 // CREATE NEW
 const addNewUser = (body) => new Promise((resolve, reject) => {
   const role_id = 3;
   const gender_id = 1;
+  const date_of_birth = new Date();
   const { email, phone, password } = body;
   const getEmail = `SELECT email FROM users WHERE email = ?`;
   db.query(getEmail, email, (err, resultGetEmail) => {
@@ -39,6 +29,7 @@ const addNewUser = (body) => new Promise((resolve, reject) => {
             password: resultHashPassword,
             role_id,
             gender_id,
+            date_of_birth,
           }
           const registerQuery = `INSERT INTO users SET ?`;
           db.query(registerQuery, userData, (err) => {

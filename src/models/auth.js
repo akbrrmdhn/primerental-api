@@ -11,7 +11,7 @@ const login = ({ email, password }) => new Promise((resolve, reject) => {
   const getPassQs = 'SELECT * FROM users WHERE email = ?';
   db.query(getPassQs, email, (err, result) => {
     if (err) return reject(err);
-    if (!result.length) return reject('401');
+    if (!result.length) return reject(401);
     const roleLevel = result[0].role_id;
     bcrypt.compare(password, result[0].password, (err, isPasswordValid) => {
       if (err) return reject(err);

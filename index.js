@@ -9,13 +9,13 @@ const mainRouter = require('./src/routes');
 
 const app = express();
 const httpServer = createServer(app);
-const port = process.env.PORT || 8000;
 const cors = {
   origin: '*',
 }
 const io = new Server(httpServer, {
   cors,
 });
+const port = process.env.PORT || 8000;
 
 app.use(corsDependencies());
 app.use(express.urlencoded({ extended: false }));

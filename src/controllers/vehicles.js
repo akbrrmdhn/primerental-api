@@ -56,13 +56,6 @@ const deleteVehicle = (req, res) => {
     .catch((err) => responseHelper.error(res, "Failed to delete vehicle", 500, err));
 };
 
-const getByScore = (req, res) => {
-  const { query } = req;
-  vehiclesModel.getByScore(query)
-    .then((result) => responseHelper.success(res, "Get vehicle by score succeed", 200, result))
-    .catch((error) => responseHelper.error(res, "SQL error", 500, error));
-};
-
 const getFavourites = (req, res) => {
   const { query } = req;
   vehiclesModel
@@ -80,7 +73,14 @@ const getFavourites = (req, res) => {
         responseHelper.success(res, "Fetch favourites succeed", 200, info);
       }
     )
-    .catch((err) => responseHelper.error(res, "Failed to fetch data.", 500, err));
+    .catch((err) => {
+      if (err === 404) {
+        return responseHelper.error(res, "No data", 404, err);
+        } else {
+        responseHelper.error(res, "Failed to fetch data.", 500, err)
+        }
+      }
+    );
 };
 
 const likeVehicle = (req, res) => {
@@ -103,7 +103,6 @@ module.exports = {
   getVehicleById,
   updateVehicle,
   deleteVehicle,
-  getByScore,
   getFavourites,
   likeVehicle,
   unlikeVehicle,

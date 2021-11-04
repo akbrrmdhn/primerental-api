@@ -7,7 +7,12 @@ const login = (req, res) => {
   const { body } = req;
   authModel.login(body)
     .then((result) => responseHelper.success(res, "Login succeed", 200, result))
-    .catch((err) => responseHelper.error(res, "Failed to login", 500, err.message));
+    .catch((err) => {
+      if(err === 401)
+        return responseHelper.error(res, "Incorrect email or Password", 401, err.message);
+      else
+       return responseHelper.error(res, "Failed to login", 500, err.message);
+    });
 };
 
 const register = (req, res) => {

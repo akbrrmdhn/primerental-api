@@ -8,45 +8,58 @@ const addNewHistory = (req, res) => {
 
   historiesModel
     .addNewHistory(body)
-    .then((data) => responseHelper.success(res, 200, data))
-    .catch((err) => responseHelper.error(res, 500, err));
+    .then((data) => responseHelper.success(res, "Added new history", 200, data))
+    .catch((err) => responseHelper.error(res, "Failed to add new history", 500, err));
 };
 
 const getAllHistories = (req, res) => {
+  const { query } = req;
   historiesModel
-    .getAllHistories()
-    .then((data) => responseHelper.success(res, 200, data))
-    .catch((err) => responseHelper.error(res, 500, err));
+    .getAllHistories(query)
+    .then(
+      ({ result, totalData, totalPage, currentPage, prevPage, nextPage }) => {
+        const info = {
+          data: result,
+          totalData,
+          totalPage,
+          currentPage,
+          prevPage,
+          nextPage,
+        };
+        responseHelper.success(res, "Fetch histories succeed", 200, info);
+      }
+    )
+    .catch((err) => responseHelper.error(res, "Failed to fetch histories.", 500, err));
 };
 
 const getHistoryById = (req, res) => {
   const { params } = req;
   historiesModel
     .getHistoryById(params.id)
-    .then((data) => responseHelper.success(res, 200, data))
-    .catch((err) => responseHelper.error(res, 500, err));
+    .then((data) => responseHelper.success(res, "Fetched history by id", 200, data))
+    .catch((err) => responseHelper.error(res, "Failed to fetch history by id", 500, err));
 };
 
-const updateHistoryStatus = (req, res) => {
+const updateHistory = (req, res) => {
   const { params } = req;
   historiesModel
-    .updateHistoryStatus(params.id, params.status)
-    .then((data) => responseHelper.success(res, 200, data))
-    .catch((err) => responseHelper.error(res, 500, err));
+    .updateHistory(params.id, params.status)
+    .then((data) => responseHelper.success(res, "History updated", 200, data))
+    .catch((err) => responseHelper.error(res, "Failed to update history", 500, err));
 };
 
 const deleteHistory = (req, res) => {
   const { params } = req;
   historiesModel
     .deleteHistory(params.id)
-    .then((data) => responseHelper.success(res, 200, data))
-    .catch((err) => responseHelper.error(res, 500, err));
+    .then((data) => responseHelper.success(res, "History deleted", 200, data))
+    .catch((err) => responseHelper.error(res, "Failed to delete history", 500, err));
 };
 
 module.exports = {
   addNewHistory,
   getAllHistories,
   getHistoryById,
-  updateHistoryStatus,
+  updateHistory,
   deleteHistory,
 };
