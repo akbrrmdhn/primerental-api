@@ -47,14 +47,14 @@ npm install
 STEP 3 : Create .env file on your local directory as this doesn't come with the clone.
 
 ```
-DB_HOST = "eu-cdbr-west-01.cleardb.com"
-DB_USER = "b2df8104c768c5"
-DB_PASSWORD = "b2afa857"
-DB_DATABASE = "heroku_8de465c9468224c"
-SECRET_KEY = "BATCH-23"
-PORT = "8000"
-SENDER_EMAIL = "primerental.mail@gmail.com"
-SENDER_PASSWORD = "optimusPrimeRental"
+DB_HOST = "YOUR_HOST"
+DB_USER = "YOUR_USERNAME"
+DB_PASSWORD = "YOUR_PASSWORD"
+DB_DATABASE = "YOUR_DATABASE"
+SECRET_KEY = "YOUR_SECRET_KEY"
+PORT = "YOUR_PORT"
+SENDER_EMAIL = "YOUR_EMAIL"
+SENDER_PASSWORD = "YOUR_EMAIL_PASSWORD"
 ```
 
 ### **HOW TO RUN**

@@ -1,4 +1,5 @@
 const mainRouter = require('express').Router();
+const authMiddleware = require('../middlewares/auth');
 
 const pingRouter = require('./ping');
 const userRouter = require('./users');
@@ -8,7 +9,7 @@ const authRouter = require('./auth');
 const chatRouter = require('./chat');
 
 mainRouter.use('/', pingRouter);
-mainRouter.use('/users', userRouter);
+mainRouter.use('/users', authMiddleware.checkToken, userRouter);
 mainRouter.use('/vehicles', vehicleRouter);
 mainRouter.use('/histories', historyRouter);
 mainRouter.use('/auth', authRouter);

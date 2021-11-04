@@ -77,9 +77,9 @@ const getHistoryById = (id) => new Promise((resolve, reject) => {
   });
 });
 
-const updateHistory = (id, status) => new Promise((resolve, reject) => {
+const updateHistory = (query, id) => new Promise((resolve, reject) => {
   const queryString = 'UPDATE histories SET ? WHERE id = ?';
-  db.query(queryString, (id, status), (error, result) => {
+  db.query(queryString, [query, id], (error, result) => {
     if (error) return reject(error);
     return resolve(result);
   });

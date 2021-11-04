@@ -1,14 +1,14 @@
-const jwt = require('jsonwebtoken');
-const db = require('../database/mysql');
+const jwt = require("jsonwebtoken");
+const db = require("../database/mysql");
 
-const responseHelper = require('../helpers/response');
+const responseHelper = require("../helpers/response");
 
 const checkToken = (req, res, next) => {
   const bearerToken = req.header("x-access-token");
   if (!bearerToken)
     return responseHelper.error(res, "Unauthorized", 401, "Anda belum login!");
   const token = bearerToken.split(" ")[1];
-  jwt.verify(token, process.env.SECRET_KEY, (err) => {
+  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
     if (err) {
       const queryDelete = `DELETE FROM active_token WHERE token = "${token}"`;
       db.query(queryDelete, (err) => {
@@ -32,33 +32,32 @@ const checkToken = (req, res, next) => {
             401,
             "Please Sign In Again"
           );
-        req.token = token;
+        req.user_id = decoded.user_id;
+        req.roleLevel = decoded.roleLevel;
         next();
       });
     }
   });
 };
 
-
 const authAdmin = (req, res, next) => {
-  const { token } = req;
-  jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
-    if (err) return new Error (responseHelper.error(res, "Access denied", 401, err));
-    req.payload = payload;
-    if(payload.roleLevel !== 1)
-      return new Error(responseHelper.error(res, "Access denied. Not an admin.", 403, err));
-    next();
-  });
+  const { roleLevel } = req;
+  if (roleLevel !== 1)
+    return responseHelper.error(res, "Access denied. Not an admin.", 403, "error msg")
+  next();
 };
 
 const authMerchant = (req, res, next) => {
   const { token } = req;
   jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
-    if (err) return new Error (responseHelper.error(res, "Access denied", 401, err));
+    if (err)
+      return new Error(responseHelper.error(res, "Access denied", 401, err));
     req.payload = payload;
-    if(payload.roleLevel !== 1)
-      if(payload.roleLevel !== 2)
-        return new Error(responseHelper.error(res, "Access denied. Not a merchant.", 403, err));
+    if (payload.roleLevel !== 1)
+      if (payload.roleLevel !== 2)
+        return new Error(
+          responseHelper.error(res, "Access denied. Not a merchant.", 403, err)
+        );
     next();
   });
 };
@@ -66,11 +65,14 @@ const authMerchant = (req, res, next) => {
 const authUser = (req, res, next) => {
   const { token } = req;
   jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
-    if (err) return new Error (responseHelper.error(res, "Access denied", 401, err));
+    if (err)
+      return new Error(responseHelper.error(res, "Access denied", 401, err));
     req.payload = payload;
-    if(payload.roleLevel !== 1)
-      if(payload.roleLevel !== 3)
-        return new Error(responseHelper.error(res, "Access denied. Not a user.", 403, err));
+    if (payload.roleLevel !== 1)
+      if (payload.roleLevel !== 3)
+        return new Error(
+          responseHelper.error(res, "Access denied. Not a user.", 403, err)
+        );
     next();
   });
 };

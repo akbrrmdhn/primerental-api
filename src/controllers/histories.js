@@ -41,9 +41,9 @@ const getHistoryById = (req, res) => {
 };
 
 const updateHistory = (req, res) => {
-  const { params } = req;
+  const { query, params } = req;
   historiesModel
-    .updateHistory(params.id, params.status)
+    .updateHistory(query, params.id)
     .then((data) => responseHelper.success(res, "History updated", 200, data))
     .catch((err) => responseHelper.error(res, "Failed to update history", 500, err));
 };

@@ -4,8 +4,8 @@ const usersModel = require('../models/users');
 const responseHelper = require('../helpers/response');
 
 const getUserById = (req, res) => {
-  const { params } = req;
-  usersModel.getUserById(params.id)
+  const { user_id } = req;
+  usersModel.getUserById(user_id)
     .then((data) => responseHelper.success(res, "User data fetched", 200, data))
     .catch((err) => responseHelper.error(res, "Failed to fetch user data", 500, err));
 };
