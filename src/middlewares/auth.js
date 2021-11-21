@@ -48,33 +48,18 @@ const authAdmin = (req, res, next) => {
 };
 
 const authMerchant = (req, res, next) => {
-  const { token } = req;
-  jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
-    if (err)
-      return new Error(responseHelper.error(res, "Access denied", 401, err));
-    req.payload = payload;
-    if (payload.roleLevel !== 1)
-      if (payload.roleLevel !== 2)
-        return new Error(
-          responseHelper.error(res, "Access denied. Not a merchant.", 403, err)
-        );
-    next();
-  });
+  const { roleLevel } = req;
+  if (roleLevel !== 1)
+    return responseHelper.error(res, "Access denied. Not an admin.", 403, "error msg")
+  if (roleLevel !== 2)
+    return responseHelper.error(res, "Access denied. Not a merchant.", 403, "error msg")
+  next();
 };
 
 const authUser = (req, res, next) => {
-  const { token } = req;
-  jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
-    if (err)
-      return new Error(responseHelper.error(res, "Access denied", 401, err));
-    req.payload = payload;
-    if (payload.roleLevel !== 1)
-      if (payload.roleLevel !== 3)
-        return new Error(
-          responseHelper.error(res, "Access denied. Not a user.", 403, err)
-        );
-    next();
-  });
+  const { roleLevel } = req;
+  if (roleLevel !== 3)
+    return responseHelper.error(res, "Access denied. Not a user.", 403, "error msg")
 };
 
 module.exports = {

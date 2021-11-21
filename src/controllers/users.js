@@ -10,80 +10,24 @@ const getUserById = (req, res) => {
     .catch((err) => responseHelper.error(res, "Failed to fetch user data", 500, err));
 };
 
-const updatePassword = (req, res) => {
-  const { body, params } = req;
-
-  usersModel.updatePassword(body, params.id)
-    .then((data) => responseHelper.success(res, "Password updated successfully", 200, data))
-    .catch((err) => responseHelper.error(res, "Failed to update password", 500, err));
-};
-
-const forgotPassword = (req, res) => {
-  const { body } = req;
-  usersModel
-    .forgotPassword(body)
-    .then((result) => responseHelper.success(res, "Success", 201, result))
-    .catch((err) => {
-      if (err === 404) {
-        return responseHelper.error(
-          res,
-          "Not Found!",
-          404,
-          "E-mail not registered"
-        );
-      }
-      return responseHelper.error(res, "Error", 500, err);
-    });
-};
-
-const checkForgotPassword = (req, res) => {
-  const { body } = req;
-  usersModel
-    .checkForgotCode(body)
-    .then((result) => responseHelper.success(res, "Success", 200, result))
-    .catch((err) => {
-      if (err === 404) {
-        return responseHelper.error(res, "err", 404, "Code is invalid");
-      }
-      return responseHelper.error(res, "Error", 500, err);
-    });
-};
-
-const changePassword = (req, res) => {
-  const { body } = req;
-  usersModel
-    .changePassword(body)
-    .then((result) =>
-      responseHelper.success(res, "Password Has Been Changed!", 200, result)
-    )
-    .catch((err) => {
-      responseHelper.error(res, "Error", 500, err);
-    });
-};
-
 const editUser = (req, res) => {
-  const { file, params, body } = req;
-  console.log('image:', file);
+  const { file, user_id, body } = req;
   usersModel
-    .editUser(file, params.id, body)
+    .editUser(file, user_id, body)
     .then((result) => responseHelper.success(res, "Profile updated successfully", 200, result))
     .catch((err) => responseHelper.error(res, "Profile update error", 500, err));
 };
 
 const deleteUser = (req, res) => {
-  const { params } = req;
+  const { user_id } = req;
   usersModel
-    .deleteUser(params.id)
+    .deleteUser(user_id)
     .then((data) => responseHelper.success(res, "User deleted successfully", 200, data))
     .catch((err) => responseHelper.error(res, "Failed to delete user.", 500, err));
 };
 
 module.exports = {
   getUserById,
-  updatePassword,
   editUser,
   deleteUser,
-  forgotPassword,
-  checkForgotPassword,
-  changePassword,
 };

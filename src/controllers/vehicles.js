@@ -5,10 +5,10 @@ const responseHelper = require('../helpers/response');
 const db = require('../database/mysql');
 
 const addNewVehicle = (req, res) => {
-  const { file, body } = req;
+  const { file, body, user_id } = req;
 
   vehiclesModel
-    .addNewVehicle(file, body)
+    .addNewVehicle(file, body, user_id)
     .then((data) => responseHelper.success(res, "Successfully added new vehicle.", 200, data))
     .catch((err) => responseHelper.error(res, "Failed to add new vehicle", 500, err));
 };

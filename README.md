@@ -67,7 +67,7 @@ Nodemon comes along with the module installation, so all you need to do is run
 npm run dev
 ```
 
-The application will run on Heroku: [https://nodejs-primerental-heroku.herokuapp.com/](https://nodejs-primerental-heroku.herokuapp.com/).
+The application will run on localhost: [http://localhost:{YOUR_PORT}/]().
 <br>
 
 ### **AVAILABLE ROUTES**

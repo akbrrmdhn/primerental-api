@@ -3,7 +3,7 @@
 const db = require('../database/mysql');
 
 // CREATE NEW
-const addNewVehicle = (file, body) => new Promise((resolve, reject) => {
+const addNewVehicle = (file, body, user_id) => new Promise((resolve, reject) => {
   const getFileQuery = 'SELECT image FROM vehicles';
   db.query(getFileQuery, (err, dbUrl) => {
     if (err) return reject(err);
@@ -13,14 +13,15 @@ const addNewVehicle = (file, body) => new Promise((resolve, reject) => {
       const imageUrl = `/images/${file.filename}`;
       input = {
         image: imageUrl,
+        owner_id: user_id,
       };
     }
     if (!file) {
       input = {
         image: dbUrl[0]?.image,
+        owner_id: user_id,
       };
     }
-
     const newBody = { ...body, ...input };
     const insertQuery = 'INSERT INTO vehicles SET ?';
     db.query(insertQuery, newBody, (error, result) => {
