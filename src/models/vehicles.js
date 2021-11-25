@@ -77,7 +77,7 @@ const getVehicles = (query) => new Promise((resolve, reject) => {
 });
 
 const getVehicleById = (id) => new Promise((resolve, reject) => {
-  const qs = 'SELECT v.id AS id, v.name AS name, c.name AS category, v.stock, v.description, l.name AS location, v.image, v.price, v.owner_id, bs.id AS status_id, bs.name AS book_status FROM vehicles v JOIN categories c ON v.category_id = c.id JOIN locations l ON v.location_id = l.id JOIN booking_status bs ON v.booking_status_id = bs.id WHERE v.id = ?';
+  const qs = 'SELECT v.id AS id, v.name AS name, v.category_id, c.name AS category, v.stock, v.description, v.location_id, l.name AS location, v.image, v.price, v.owner_id, bs.id AS status_id, bs.name AS book_status FROM vehicles v JOIN categories c ON v.category_id = c.id JOIN locations l ON v.location_id = l.id JOIN booking_status bs ON v.booking_status_id = bs.id WHERE v.id = ?';
   db.query(qs, id, (error, result) => {
     if (error) return reject(error);
     return resolve(result);
