@@ -39,7 +39,7 @@ const getAllHistories = (query) => new Promise((resolve, reject) => {
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 10;
   const offset = limit * (page - 1);
-  const queryString = `SELECT h.id AS "transaction_id", u.id AS "patron_id", u.name AS "patron_name", v.name AS "vehicle_name", v.owner_id, h.quantity, h.total_price, h.rent_date, h.return_date, rs.name AS payment_status FROM histories h JOIN users u ON h.user_id = u.id JOIN vehicles v ON h.vehicle_id = v.id JOIN rent_status rs ON h.status_id = rs.id WHERE user_id${user_id} AND owner_id${owner_id} AND v.name LIKE "%${keyword}%" ORDER BY ${order_by} ${sort} LIMIT ${limit} OFFSET ${offset}`;
+  const queryString = `SELECT h.id AS "transaction_id", u.id AS "patron_id", u.name AS "patron_name", v.name AS "vehicle_name", v.owner_id, v.image, h.quantity, h.total_price, h.rent_date, h.return_date, rs.name AS payment_status FROM histories h JOIN users u ON h.user_id = u.id JOIN vehicles v ON h.vehicle_id = v.id JOIN rent_status rs ON h.status_id = rs.id WHERE user_id${user_id} AND owner_id${owner_id} AND v.name LIKE "%${keyword}%" ORDER BY ${order_by} ${sort} LIMIT ${limit} OFFSET ${offset}`;
   db.query(queryString, (error, result) => {
     if (error) return reject(error);
     if (!result.length) return reject(404);
