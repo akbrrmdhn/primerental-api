@@ -37,7 +37,7 @@ const login = ({ email, password }) => new Promise((resolve, reject) => {
         payload,
         process.env.SECRET_KEY,
         {
-          expiresIn: '60m',
+          expiresIn: '7d',
           issuer: 'primerental',
         },
         (err, token) => {
