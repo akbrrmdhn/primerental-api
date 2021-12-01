@@ -72,7 +72,7 @@ const getAllHistories = (query) => new Promise((resolve, reject) => {
 });
 
 const getHistoryById = (id) => new Promise((resolve, reject) => {
-  const queryString = `SELECT v.id AS 'vehicle_id', u.id AS 'user_id', h.rent_date, h.return_date, h.booking_code, h.payment_code, rs.name AS rent_status, u.name AS patron, u.phone, u.email, v.name AS rented_vehicle, v.image, c.name AS category, l.name AS location FROM histories h JOIN users u ON h.user_id = u.id JOIN vehicles v ON h.vehicle_id = v.id JOIN rent_status rs ON h.status_id = rs.id JOIN locations l ON v.location_id = l.id JOIN categories c ON v.category_id = c.id WHERE h.id = ?`;
+  const queryString = `SELECT v.id AS 'vehicle_id', u.id AS 'user_id', h.rent_date, h.return_date, h.booking_code, h.payment_code, h.total_price, rs.name AS rent_status, u.name AS patron, u.phone, u.email, v.name AS rented_vehicle, v.image, c.name AS category, l.name AS location FROM histories h JOIN users u ON h.user_id = u.id JOIN vehicles v ON h.vehicle_id = v.id JOIN rent_status rs ON h.status_id = rs.id JOIN locations l ON v.location_id = l.id JOIN categories c ON v.category_id = c.id WHERE h.id = ?`;
   db.query(queryString, id, (error, result) => {
     if (error) return reject(error);
     return resolve(result);
