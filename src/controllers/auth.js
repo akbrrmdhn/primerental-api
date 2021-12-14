@@ -62,7 +62,7 @@ const checkForgotCode = (req, res) => {
     .then((result) => responseHelper.success(res, "Success", 200, result))
     .catch((err) => {
       if (err === 404) {
-        return responseHelper.error(res, "err", 404, "Code is invalid");
+        return responseHelper.error(res, "err", 404, "Code is invalid!");
       }
       return responseHelper.error(res, "Error", 500, err);
     });
